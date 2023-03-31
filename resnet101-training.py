@@ -1,6 +1,9 @@
-# Learn about custom dataset (i.e. using our own images) for Machine Learning
-# updated... Using Transfer Learning: EfficientNet base model adapter to our problem set
-# 11/3/22
+# Using Transfer Learning: ResNet101 base model 
+# adapter to our problem set of bird classification
+# Bird Classification Training Program
+# 3/31/23 
+# by @owel.codes
+
 
 import os
 import requests

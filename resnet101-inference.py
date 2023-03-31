@@ -1,5 +1,7 @@
 # Inferencing: Load saved model and inference a sample photo
-# 11/17/22
+# Bird Classification
+# 3/31/23 
+# by @owel.codes
 
 import os
 import requests

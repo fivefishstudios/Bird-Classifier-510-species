@@ -77,29 +77,30 @@ filepathname = "./unknown/mourning-dove1.jpg"
 # filepathname = "./unknown/violet-turaco3.jpg"
 # filepathname = "./unknown/macan1.jpg"
 # filepathname = "./unknown/macan2.jpg"
-# filepathname = "./unknown/kingfisher1.jpeg"
+filepathname = "./unknown/kingfisher1.jpeg"
 # filepathname = "./unknown/kingfisher2.jpg"
 # filepathname = "./unknown/puffin1.jpg"
-# filepathname = "./unknown/puffin2.jpg"
+filepathname = "./unknown/puffin2.jpg"
 # filepathname = "./unknown/puffin3.jpg"
 # filepathname = "./unknown/tasmanian-hen1.jpeg"
 # filepathname = "./unknown/tasmanian-hen2.jpg"
 # filepathname = "./unknown/paradise1.jpg"
-# filepathname = "./unknown/paradise2.jpg"
-filepathname = "./unknown/titmouse1.jpg"
-filepathname = "./unknown/tit-mouse2.jpg"
+filepathname = "./unknown/paradise2.jpg"
+# filepathname = "./unknown/titmouse1.jpg"
+# filepathname = "./unknown/tit-mouse2.jpg"
 # filepathname = "./unknown/turkey2.jpg"
 # filepathname = "./unknown/Mourning-Dove-2.jpg"
 # filepathname = "../BirdBrain-AI/data/test/AFRICAN PYGMY GOOSE/4.jpg"
 # filepathname = "../BirdBrain-AI/data/valid/AMERICAN GOLDFINCH/3.jpg"
-filepathname = "../BirdBrain-AI/data/valid/AFRICAN OYSTER CATCHER/2.jpg"
-filepathname = "../BirdBrain-AI/data/valid/AMERICAN PIPIT/1.jpg"
+# filepathname = "../BirdBrain-AI/data/valid/AFRICAN OYSTER CATCHER/2.jpg"
+# filepathname = "../BirdBrain-AI/data/valid/AMERICAN PIPIT/1.jpg"
 filepathname = "./unknown/bird-big-beak-1200.jpeg"
-filepathname = "./unknown/red-head-bird.jpeg"
-filepathname = "./unknown/bluebird-mountain.jpg"
-filepathname = "./unknown/rainbow-bird.jpg"
-filepathname = "./unknown/kingfisher-blue.jpg"
-filepathname = "./unknown/brown-bird1.jpg"
+# filepathname = "./unknown/red-head-bird.jpeg"
+# filepathname = "./unknown/bluebird-mountain.jpg"
+# filepathname = "./unknown/rainbow-bird.jpg"
+# filepathname = "./unknown/kingfisher-blue.jpg"
+# filepathname = "./unknown/brown-bird1.jpg"
+filepathname = "./unknown/bluebird-branch.jpeg"
 
 
 # setup cuda if available
@@ -210,8 +211,8 @@ unknown_img_t = unknown_img_t.to(device)
 model.eval()
 with torch.inference_mode():
     predicted_class_logits = model(unknown_img_t)
-    print(f"filepathname: {filepathname}")
-    print(f"\nlogits: {predicted_class_logits}")
+    print(f"\n\nfilepathname: {filepathname}")
+    # print(f"\nlogits: {predicted_class_logits}")
     print(f"predicted object is a: {class_names[torch.argmax(predicted_class_logits)]}")
     # shadow text
     cv2.putText(unknown_img, class_names[torch.argmax(predicted_class_logits)], (33, 53), cv2.FONT_HERSHEY_SIMPLEX, 1.12,
@@ -221,6 +222,6 @@ with torch.inference_mode():
                 (20, 255, 20), 3)
     cv2.imshow(class_names[torch.argmax(predicted_class_logits)], unknown_img)
     end_time = timer()
-    print(f"total inference time is: {end_time - start_time} seconds")
+    print(f"total inference time is: {end_time - start_time} seconds\n\n")
 
 cv2.waitKey()

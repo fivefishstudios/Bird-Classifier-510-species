@@ -87,11 +87,19 @@ filepathname = "./unknown/mourning-dove1.jpg"
 # filepathname = "./unknown/paradise1.jpg"
 # filepathname = "./unknown/paradise2.jpg"
 filepathname = "./unknown/titmouse1.jpg"
-# filepathname = "./unknown/tit-mouse2.jpg"
+filepathname = "./unknown/tit-mouse2.jpg"
 # filepathname = "./unknown/turkey2.jpg"
 # filepathname = "./unknown/Mourning-Dove-2.jpg"
 # filepathname = "../BirdBrain-AI/data/test/AFRICAN PYGMY GOOSE/4.jpg"
 # filepathname = "../BirdBrain-AI/data/valid/AMERICAN GOLDFINCH/3.jpg"
+filepathname = "../BirdBrain-AI/data/valid/AFRICAN OYSTER CATCHER/2.jpg"
+filepathname = "../BirdBrain-AI/data/valid/AMERICAN PIPIT/1.jpg"
+filepathname = "./unknown/bird-big-beak-1200.jpeg"
+filepathname = "./unknown/red-head-bird.jpeg"
+filepathname = "./unknown/bluebird-mountain.jpg"
+filepathname = "./unknown/rainbow-bird.jpg"
+filepathname = "./unknown/kingfisher-blue.jpg"
+filepathname = "./unknown/brown-bird1.jpg"
 
 
 # setup cuda if available
@@ -205,6 +213,10 @@ with torch.inference_mode():
     print(f"filepathname: {filepathname}")
     print(f"\nlogits: {predicted_class_logits}")
     print(f"predicted object is a: {class_names[torch.argmax(predicted_class_logits)]}")
+    # shadow text
+    cv2.putText(unknown_img, class_names[torch.argmax(predicted_class_logits)], (33, 53), cv2.FONT_HERSHEY_SIMPLEX, 1.12,
+                (20, 20, 20), 3)
+    # foreground text
     cv2.putText(unknown_img, class_names[torch.argmax(predicted_class_logits)], (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.12,
                 (20, 255, 20), 3)
     cv2.imshow(class_names[torch.argmax(predicted_class_logits)], unknown_img)

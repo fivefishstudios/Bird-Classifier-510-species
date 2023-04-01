@@ -12,10 +12,10 @@ initially set IsCapturingVideo = False
 Using opencv, open USB camera
 while (True) # keep looping unitl Q press 
     grab a video frame from USB camera
-    
+
     if Not IsCapturingVideo 
         do cv2 object detection using video frame (time elapsed?)
-        if object detected = 'bird'==  True 
+        if object detected 'bird' ==  True 
             set birdfound = True 
             # bird is detected
             # now, let's identify what kind of bird species

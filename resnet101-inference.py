@@ -198,10 +198,12 @@ unknown_img_rgb = cv2.cvtColor(unknown_img, cv2.COLOR_BGR2RGB)
 img_transform = transforms.Compose([
     transforms.ToTensor(),
     transforms.Resize(size=(224, 224), antialias=True),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                         std=[0.229, 0.224, 0.225])
 ])
 
 # resize image to 64x64, same size expected by our model
-unknown_img_rgb = cv2.resize(unknown_img_rgb, dsize=(224, 224))
+# unknown_img_rgb = cv2.resize(unknown_img_rgb, dsize=(224, 224))
 unknown_img_t = img_transform(unknown_img_rgb)  # convert to tensor
 unknown_img_t = unknown_img_t.unsqueeze(dim=0)  # add batch size
 

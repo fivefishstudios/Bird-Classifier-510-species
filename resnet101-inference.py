@@ -202,8 +202,7 @@ img_transform = transforms.Compose([
                          std=[0.229, 0.224, 0.225])
 ])
 
-# resize image to 64x64, same size expected by our model
-# unknown_img_rgb = cv2.resize(unknown_img_rgb, dsize=(224, 224))
+# resize image to 224x224, same size expected by our model
 unknown_img_t = img_transform(unknown_img_rgb)  # convert to tensor
 unknown_img_t = unknown_img_t.unsqueeze(dim=0)  # add batch size
 

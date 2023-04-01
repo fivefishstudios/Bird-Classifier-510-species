@@ -1,0 +1,50 @@
+
+# Bird Feeder Camera 
+# PSEUDOCODE 
+
+import needed python libraries
+load ResNet101 model
+load our custom weights from transfer learning to ResNet101 model 
+load some model to use for object detection 
+
+initially set IsCapturingVideo = False 
+
+Using opencv, open USB camera
+while (True) # keep looping unitl Q press 
+    grab a video frame from USB camera
+    
+    if Not IsCapturingVideo 
+        do cv2 object detection using video frame (time elapsed?)
+        if object detected = 'bird'==  True 
+            set birdfound = True 
+            # bird is detected
+            # now, let's identify what kind of bird species
+            convert img frame from BGR2RGB 
+            resize to 224x224 
+            convert toTensor()
+            feed image_tensor to our ResNet101 model 
+            identify the bird species (NOTE: 1.5 seconds)
+            set birdIdentified = True 
+            set birdspeciesname 
+            build filepathname = destination_directory + date + timestamp + birdspeciesname 
+            set IsCapturingVideo = True 
+            set startTime to currentTime
+        end if 
+    end if 
+    
+    if IsCapturingVideo = True  
+        putText birdspeciesname to img 
+        save video img frame to filepathname (mp4 format) 
+        # check if X seconds has passed, i.e. timeout 
+        if current_time - start_time > 10 seconds   # each bird video clip is 10 seconds
+            IsCapturingVideo = False 
+            set birdIdentified = False 
+            set Birdspeciesname = Null 
+            set birdfound = False 
+            close video file 
+        end if 
+    end if 
+
+    waitkey(10)
+    if keypress = 'Q' then exit loop 
+loop     

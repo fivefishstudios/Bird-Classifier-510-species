@@ -85,7 +85,7 @@ filepathname = "./unknown/puffin2.jpg"
 # filepathname = "./unknown/tasmanian-hen1.jpeg"
 # filepathname = "./unknown/tasmanian-hen2.jpg"
 # filepathname = "./unknown/paradise1.jpg"
-filepathname = "./unknown/paradise2.jpg"
+# filepathname = "./unknown/paradise2.jpg"
 # filepathname = "./unknown/titmouse1.jpg"
 # filepathname = "./unknown/tit-mouse2.jpg"
 # filepathname = "./unknown/turkey2.jpg"
@@ -187,13 +187,21 @@ def eval_step(model: torch.nn.Module,
 model.load_state_dict(torch.load(f=MODEL_PATH_NAME))
 
 start_time = timer()
-unknown_img = cv2.imread(filepathname)
+
+
+# unknown_img = cv2.imread(filepathname)
+usbCameraDevice = 0   # first USB camera device
+usbCamera = cv2.VideoCapture(usbCameraDevice)
+# read and display one frame
+ret, unknown_img = usbCamera.read()
+
+
 # openCV uses BGR so we need to convert to RGB
 unknown_img_rgb = cv2.cvtColor(unknown_img, cv2.COLOR_BGR2RGB)
 # print(f"unknown image shape is: {unknown_img.shape}")   # height, width, channel
 
-# cv2.imshow('Preview', unknown_img)
-# cv2.waitKey()
+cv2.imshow('Preview', unknown_img)
+cv2.waitKey()
 
 img_transform = transforms.Compose([
     transforms.ToTensor(),

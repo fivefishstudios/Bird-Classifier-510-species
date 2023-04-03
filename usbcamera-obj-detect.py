@@ -33,7 +33,7 @@ model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True, verbose
 
 # model location for ResNet101 
 MODEL_PATH = Path("models")
-MODEL_NAME = "simple-bird-resnet101-510species.pth"
+MODEL_NAME = "bird-resnet101-510species.pth"
 MODEL_PATH_NAME = MODEL_PATH / MODEL_NAME
 
 # NOTE: 510 Bird Species
@@ -99,6 +99,7 @@ output_shape = len(class_names)
 
 # load our bird classifier
 birdClassifierModel  = torchvision.models.resnet101().to(device)
+
 # override classifier method in model class
 # Recreate the classifier layer and seed it to the target device
 birdClassifierModel.classifier = torch.nn.Sequential(
@@ -167,7 +168,7 @@ while usbCamera.isOpened():
             objdetected = df['name'].values[0]
             # check if bird detected 
             if objdetected == 'bird':
-                print(f'object detected: {objdetected}')
+                print(f'{objdetected} detected')
                 BirdFound = True 
                 # get new frame from camera again 
                 # time.sleep(0.30)
@@ -185,7 +186,7 @@ while usbCamera.isOpened():
                     # print(f"\nlogits: {predicted_class_logits}")
                     birdSpeciesName = class_names[torch.argmax(predicted_class_logits)]           
                     birdIsIdentified = True 
-                    print(f'bird identified as {birdSpeciesName}')
+                    print(f'{objdetected} q identified as {birdSpeciesName}')
                 
                 # build filepath name so we can save this new video   
                 datetimenow = (datetime.datetime.now()).strftime("%c")

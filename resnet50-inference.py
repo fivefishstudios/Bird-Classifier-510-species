@@ -65,7 +65,7 @@ filepathname = "./unknown/baltimore-oriole.jpeg"
 # filepathname = "./unknown/turkey2.jpg"
 # filepathname = "./unknown/phil-eagle1.jpg"
 # filepathname = "./unknown/Philippine_Eagle2.jpg"
-filepathname = "./unknown/pink-robin1.jpeg"
+# filepathname = "./unknown/pink-robin1.jpeg"
 # filepathname = "./unknown/mourning-dove1.jpg"
 # filepathname = "./unknown/Mourning-Dove-2.jpg"
 # filepathname = "./unknown/mourningdove3.jpg"
@@ -105,7 +105,7 @@ filepathname = "./unknown/pink-robin1.jpeg"
 
 # setup cuda if available
 device = "cuda" if torch.cuda.is_available() else "cpu"
-device = "cpu"
+# device = "cpu"
 # print(f"NOTE: All calculations will be done in {device}")
 
 
@@ -204,6 +204,7 @@ img_transform = transforms.Compose([
                          std=[0.229, 0.224, 0.225])
 ])
 
+
 # resize image to 224x224, same size expected by our model
 unknown_img_t = img_transform(unknown_img_rgb)  # convert to tensor
 unknown_img_t = unknown_img_t.unsqueeze(dim=0)  # add batch size
@@ -213,20 +214,19 @@ unknown_img_t = unknown_img_t.to(device)
 
 model.eval()
 with torch.inference_mode():
-    for i in range(50):
-        start_time = timer()
-        predicted_class_logits = model(unknown_img_t)
-        # print(f"\n\nfilepathname: {filepathname}")
-        # print(f"\nlogits: {predicted_class_logits}")
-        print(f"predicted object is a: {class_names[torch.argmax(predicted_class_logits)]}")
-        # shadow text
-        # cv2.putText(unknown_img, class_names[torch.argmax(predicted_class_logits)], (33, 53), cv2.FONT_HERSHEY_SIMPLEX, 1.12,
-        #             (20, 20, 20), 3)
-        # # foreground text
-        # cv2.putText(unknown_img, class_names[torch.argmax(predicted_class_logits)], (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.12,
-        #             (20, 255, 20), 3)
-        # cv2.imshow(class_names[torch.argmax(predicted_class_logits)], unknown_img)
-        end_time = timer()
-        print(f"total inference time is: {end_time - start_time} seconds\n\n")
+    # start_time = timer()
+    predicted_class_logits = model(unknown_img_t)
+    # print(f"\n\nfilepathname: {filepathname}")
+    # print(f"\nlogits: {predicted_class_logits}")
+    print(f"predicted object using {device} is a: {class_names[torch.argmax(predicted_class_logits)]}")
+    # shadow text
+    # cv2.putText(unknown_img, class_names[torch.argmax(predicted_class_logits)], (33, 53), cv2.FONT_HERSHEY_SIMPLEX, 1.12,
+    #             (20, 20, 20), 3)
+    # # foreground text
+    # cv2.putText(unknown_img, class_names[torch.argmax(predicted_class_logits)], (30, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.12,
+    #             (20, 255, 20), 3)
+    # cv2.imshow(class_names[torch.argmax(predicted_class_logits)], unknown_img)
+    end_time = timer()
+    print(f"total inference time is: {end_time - start_time} seconds\n\n")
 
 cv2.waitKey()

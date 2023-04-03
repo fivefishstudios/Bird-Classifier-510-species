@@ -105,6 +105,7 @@ filepathname = "./unknown/baltimore-oriole.jpeg"
 
 # setup cuda if available
 device = "cuda" if torch.cuda.is_available() else "cpu"
+device = "cpu"
 # print(f"NOTE: All calculations will be done in {device}")
 
 

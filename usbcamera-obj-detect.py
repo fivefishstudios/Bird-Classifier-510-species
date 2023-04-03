@@ -8,6 +8,7 @@ import torch
 import seaborn as sn
 import os
 import datetime 
+import time
 import requests
 import zipfile
 import torch
@@ -25,6 +26,7 @@ from joblib.externals.loky.backend.context import get_context
 
 # setup cuda if available
 device = "cuda" if torch.cuda.is_available() else "cpu"
+device = "cpu"
 
 # object detection model YOLOv5
 model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True, verbose=False)
@@ -167,6 +169,9 @@ while usbCamera.isOpened():
             if objdetected == 'bird':
                 print(f'object detected: {objdetected}')
                 BirdFound = True 
+                # get new frame from camera again 
+                # time.sleep(0.30)
+                # ret, frame = usbCamera.read()
                 # let's try to identify the bird species
                 # openCV uses BGR so we need to convert to RGB
                 frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -181,7 +186,6 @@ while usbCamera.isOpened():
                     birdSpeciesName = class_names[torch.argmax(predicted_class_logits)]           
                     birdIsIdentified = True 
                     print(f'bird identified as {birdSpeciesName}')
-                # birdSpeciesName = "sample-bird"
                 
                 # build filepath name so we can save this new video   
                 datetimenow = (datetime.datetime.now()).strftime("%c")
@@ -218,6 +222,7 @@ while usbCamera.isOpened():
                 birdFound = False 
                 CloseVideoFile()
                 cv2.destroyAllWindows()
+                continue 
                 
         # write birdspecies text on video frame
         # text shadow
@@ -231,7 +236,7 @@ while usbCamera.isOpened():
         # write the frame to .mp4 file 
         videoOutput.write(frame)
         
-        # check if 10 seconds had passed
+        # check if MaxX seconds had passed
         if (timer() - start_time > MaximumVideoLength):
             print(f"{MaximumVideoLength} seconds elapsed, closing video file {filenameOut}\n")
             # stop recording, close this video file, get ready for next capture

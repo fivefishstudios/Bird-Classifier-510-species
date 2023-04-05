@@ -4,7 +4,6 @@
 # 3/31/23 
 # by @owel.codes
 
-
 import os
 # import requests
 # import zipfile
@@ -22,9 +21,15 @@ import matplotlib.pyplot as plt
 import cv2
 from joblib.externals.loky.backend.context import get_context
 
+# os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:1000"
+
+ContinueTraining = False   
+CheckpointFile = "./models/chk-resnet101-epoch-last.pth"
+
+
 CPU_COUNT = os.cpu_count()
 BATCH_SIZE = 64
-EPOCHS = 5
+EPOCHS = 3
 # NODES = 64
 LEARNING_RATE = 0.00001
 
@@ -32,11 +37,12 @@ print(f"Our PyTorch version is: {torch.__version__}")
 
 # setup cuda if available
 device = "cuda" if torch.cuda.is_available() else "cpu"
+# device = "cpu"
 print(f"NOTE: All calculations will be done in {device}")
 
 # setup path to our /data folder
-# data_path = Path("../BirdBrain-AI/data/")  # Posix format
-data_path = Path("./data/birds/")
+data_path = Path("../BirdBrain-AI/data/")  # Posix format
+# data_path = Path("./data/birds/")
 image_path = data_path      # / Path("birds")
 
 # set up train and test path
@@ -129,25 +135,45 @@ test_dataloader = DataLoader(
 
 
 # TRANSFER LEARNING -> Setup the model with pretrained weights and send it to the target device (torchvision v0.13+)
-weights = torchvision.models.ResNet101_Weights.DEFAULT 
-model  = torchvision.models.resnet101(weights=weights).to(device)
+# Continue Training where we left off
+if ContinueTraining == True:
+    print(f'Continuing training using checkpoint file {CheckpointFile}...')
+    # TODO: load checkpoint file
+    checkpoint = torch.load(CheckpointFile)
+    model  = torchvision.models.resnet101().to(device)
+    output_shape = len(class_names)
+    # Recreate the classifier layer and seed it to the target device
+    model.classifier = torch.nn.Sequential(
+        torch.nn.Dropout(p=0.2, inplace=True),
+        torch.nn.Linear(in_features=1280,
+                        out_features=output_shape, # same number of output units as our number of classes
+                        bias=True)).to(device)
+    model.load_state_dict(checkpoint['model_state_dict'])
+    optimizer = torch.optim.Adam(params=model.parameters(), lr=LEARNING_RATE)
+    # optimizer.load_state_dict(checkpoint['optimizer_state_dict']) 
+    loss_fn = nn.CrossEntropyLoss()
+    del checkpoint
+else: 
+    # new training 
+    # start from default weights
+    weights = torchvision.models.ResNet101_Weights.DEFAULT 
+    model  = torchvision.models.resnet101(weights=weights).to(device)
+    optimizer = torch.optim.Adam(params=model.parameters(), lr=LEARNING_RATE)
+    loss_fn = nn.CrossEntropyLoss()
+    output_shape = len(class_names)
+    # Recreate the classifier layer and seed it to the target device
+    model.classifier = torch.nn.Sequential(
+        torch.nn.Dropout(p=0.2, inplace=True),
+        torch.nn.Linear(in_features=1280,
+                        out_features=output_shape, # same number of output units as our number of classes
+                        bias=True)).to(device)
+        
 
 # this section does not work with ResNet101 model. No "features" method. 
 # partially freeze the model
 # for param in model.features.parameters():
 #     # print(param)
 #     param.requires_grad = False
-
-# Get the length of class_names (one output unit for each class)
-output_shape = len(class_names)
-
-# override classifier method in model class
-# Recreate the classifier layer and seed it to the target device
-model.classifier = torch.nn.Sequential(
-    torch.nn.Dropout(p=0.2, inplace=True),
-    torch.nn.Linear(in_features=1280,
-                    out_features=output_shape, # same number of output units as our number of classes
-                    bias=True)).to(device)
 
 
 # check if our model works
@@ -276,7 +302,7 @@ def train_model(model: torch.nn.Module,
         torch.save(obj={'epoch': epoch,
                     'model_state_dict': model.state_dict(),
                     'optimizer_state_dict': optimizer.state_dict()},                     
-                    f=f'./models/testing-resnet101-epoch-{epoch}.pth')
+                    f=CheckpointFile)
 
     # return dictionary
     return results
@@ -284,8 +310,6 @@ def train_model(model: torch.nn.Module,
 
 # create training loop
 
-loss_fn = nn.CrossEntropyLoss()
-optimizer = torch.optim.Adam(params=model.parameters(), lr=LEARNING_RATE)
 
 start_time = timer()
 model_results = train_model(
@@ -303,7 +327,7 @@ print(f"\nTotal training time: {end_time - start_time} seconds")
 # Save this model to disk for later recall
 MODEL_PATH = Path("models")
 MODEL_PATH.mkdir(parents=True, exist_ok=True)
-MODEL_FILENAME = "sample-stop-restart-resnet101-510species.pth"
+MODEL_FILENAME = "bird-testing-resnet101-510species.pth"
 MODEL_SAVEPATHNAME = MODEL_PATH / MODEL_FILENAME
 
 # save model state dictionary

@@ -22,7 +22,7 @@ from joblib.externals.loky.backend.context import get_context
 
 # model location
 MODEL_PATH = Path("models")
-MODEL_NAME = "simple-bird-resnet101-510species.pth"
+MODEL_NAME = "bird-testing-resnet101-510species.pth"
 MODEL_PATH_NAME = MODEL_PATH / MODEL_NAME
 
 # NOTE: 510 Bird Species

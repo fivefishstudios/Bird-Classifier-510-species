@@ -17,13 +17,13 @@ from tqdm.auto import tqdm
 from timeit import default_timer as timer
 from torchinfo import summary
 from PIL import Image
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt 
 import cv2
 from joblib.externals.loky.backend.context import get_context
 
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:1000"
 
-ContinueTraining = False   
+ContinueTraining = True   
 CheckpointFile = "./models/chk-resnet101-epoch-last.pth"
 
 
